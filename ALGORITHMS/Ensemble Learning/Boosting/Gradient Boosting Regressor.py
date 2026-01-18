@@ -12,6 +12,8 @@ gb2 = GradientBoostingRegressor(loss="huber",n_estimators=150)
 gb3 = GradientBoostingRegressor(loss="quantile",n_estimators=150)
 gb4 = GradientBoostingRegressor(loss="squared_error",n_estimators=150)
 
+# Both criterion parameters gives almost same accuracy. 
+
 trainx , testx, trainy , testy = train_test_split(x,y, test_size=0.3, random_state=33)
 
 gb1.fit(trainx,trainy)
