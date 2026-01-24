@@ -6,6 +6,7 @@ NumPy is used for working with array. It is short for "Numerical Python". It als
 fourier transform, and matrices. NumPy arrays are stored at one continuous place in memory unlike lists, so processes can access and 
 manipulate them very efficiently. This behavior is called locality of reference in computer science.
 
+x[:, 0] : Slicing is done like this in numpy array.
 
 '''
 
