@@ -18,46 +18,53 @@ trainx , testx , trainy, testy = train_test_split(x,y, test_size=0.3, random_sta
 
 '''
 
+XGBRegressor (Gradient Boosting): Builds trees sequentially to correct the errors (residuals) of
+previous trees by minimizing a regression loss function.
+
 Common Hyperparameters for XGBRegressor:
 
-1. n_estimators: The number of decision trees in the ensemble (boosting rounds).
+1. n_estimators:
+   The number of decision trees in the ensemble (boosting rounds).
 
-2. learning_rate (eta): Controls how much the model learns in each step (shrinkage), smaller values 
-prevent overfitting.
+2. learning_rate (eta):
+   Controls how much the model learns in each step (shrinkage). Smaller values require more trees
+   but improve generalization and reduce overfitting.
 
-3. max_depth: The maximum depth of each decision tree; a higher value increases model complexity and 
-overfitting.
+3. max_depth:
+   The maximum depth of each decision tree. Higher values increase model complexity and risk of
+   overfitting.
 
-4. subsample: The fraction of samples used to train each tree.
+4. subsample:
+   The fraction of training samples used to train each tree. Values < 1.0 add randomness and help
+   reduce overfitting.
 
-5. colsample_bytree: The fraction of features (columns) used when building each tree. 
+5. colsample_bytree:
+   The fraction of features (columns) used when building each tree.
 
-6. gamma: The "complexity control." A tree split only happens if the resulting loss reduction exceeds 
-this value. High gamma = conservative model.
+6. gamma:
+   Minimum loss reduction required to make a split. Higher values make the model more conservative.
 
-7. min_child_weight: Defines the minimum "strength" or number of samples required in a leaf. 
-In regression, it relates to the sum of instances.
+7. min_child_weight:
+   Minimum sum of Hessians (second-order gradients) needed in a child node. Larger values prevent
+   overfitting by avoiding splits on small or noisy data.
 
-8. reg_lambda (L2): The default is 1. Increasing this makes leaf weights smaller and smoother.
+8. reg_lambda (L2 regularization):
+   Controls L2 regularization on leaf weights. Increasing this makes the model more robust and
+   smoother.
 
-9. reg_alpha (L1): Useful if you have a massive amount of features and want the model to ignore 
-the useless ones (it can push weights to zero).
+9. reg_alpha (L1 regularization):
+   Controls L1 regularization on leaf weights. Encourages sparsity in leaf weights and can reduce
+   the influence of less important features.
+
+10. objective:
+    Specifies the regression loss function:
+    - 'reg:squarederror'      → Mean Squared Error (default)
+    - 'reg:absoluteerror'    → Mean Absolute Error
+    - 'reg:pseudohubererror' → Robust loss (less sensitive to outliers)
 
 '''
 
 xgbt = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=300, learning_rate=0.3)
-
-'''
-
-Difference Between XGBRFRegressor and XGBRegressor:
-
-1. XGBRegressor (Gradient Boosting): Builds trees sequentially to correct the errors (residuals) of 
-previous trees (minimizes bias).
-
-2. XGBRFRegressor (Random Forest): Builds trees in parallel (independently) and averages their predictions 
-to reduce variance and prevent overfitting. 
-
-'''
 
 xgbt.fit(trainx, trainy)
 predy = xgbt.predict(testx)

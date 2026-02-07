@@ -18,44 +18,42 @@ trainx , testx , trainy, testy = train_test_split(x,y, test_size=0.3, random_sta
 
 '''
 
-Common Hyperparameters for XGBRFRegressor: 
+XGBRFRegressor builds multiple decision trees in parallel (bagging) and averages their predictions, 
+similar to a Random Forest but using XGBoosts tree implementation.
 
-1. n_estimators: The number of trees. Since they are parallel, more is generally better (until it plateaus), but 
-it takes more memory.
+Key Hyperparameters:
 
-2. max_depth: Controls how deep each tree can grow. Deeper trees capture more detail but are the #1 cause of overfitting.
+1. n_estimators:
+   Number of trees built in parallel. More trees reduce variance but increase
+   memory usage.
 
-3. learning_rate: In a true Random Forest, this is usually left at 1.0. Lowering it turns the model back into a 
-"boosted" forest.
+2. max_depth:
+   Maximum depth of each tree. The primary driver of overfitting.
 
-4. subsample: The fraction of rows used to train each tree. Lowering this adds "randomness" and prevents overfitting.
+3. learning_rate:
+   Should typically be left at 1.0. Unlike boosted XGBoost models, this does
+   not control sequential learning.
 
-5. colsample_bynode: The fraction of features used for each split. This is vital for RF models to ensure trees aren't
-all identical.
+4. subsample:
+   Fraction of training rows used for each tree. Lower values increase
+   randomness and reduce overfitting.
 
-6. min_child_weight: Think of this as the minimum number of samples required to create a new leaf. 
-Higher values make the model more conservative.
+5. colsample_bynode:
+   Fraction of features considered at each split. Essential for tree diversity.
 
-7. reg_alpha (L1) and reg_lambda (L2): These apply penalties to the weights of the leaves. 
-If your features are noisy, increasing reg_lambda (default is 1) can help smooth out the predictions.
+6. min_child_weight:
+   Minimum sum of Hessians required in a child node. Higher values make the model more stable.
 
-8. gamma: The minimum loss reduction required to make a further partition. It acts as a "pruning" mechanism.
+7. reg_alpha (L1) and reg_lambda (L2):
+   Regularization on leaf weights. Increasing reg_lambda helps smooth
+   predictions when features are noisy.
+
+8. gamma:
+   Minimum loss reduction required to make a split, acting as a pruning mechanism.
 
 '''
 
 xgbrf = xgb.XGBRFRegressor(n_estimators=300, learning_rate = 1)
-
-'''
-
-Difference Between XGBRFRegressor and XGBRegressor:
-
-1. XGBRegressor (Gradient Boosting): Builds trees sequentially to correct the errors (residuals) of 
-previous trees (minimizes bias).
-
-2. XGBRFRegressor (Random Forest): Builds trees in parallel (independently) and averages their predictions 
-to reduce variance and prevent overfitting. 
-
-'''
 
 xgbrf.fit(trainx,trainy)
 predy = xgbrf.predict(testx)
