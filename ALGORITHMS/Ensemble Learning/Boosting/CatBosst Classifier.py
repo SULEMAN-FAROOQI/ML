@@ -3,10 +3,10 @@ from sklearn.metrics import accuracy_score
 import catboost as cat
 from sklearn.datasets import load_breast_cancer
 
-covid = load_breast_cancer(as_frame=True)
+cancer = load_breast_cancer(as_frame=True)
 
-x = covid.data
-y = covid.target
+x = cancer.data
+y = cancer.target
 
 trainx ,testx, trainy, testy = train_test_split(x,y, test_size=0.3, random_state=33)
 

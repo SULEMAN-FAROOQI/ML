@@ -22,3 +22,13 @@ print("The R2 Score after using Catboost with RMSE is:",r2_score(testy,predy_meo
 meow2.fit(trainx, trainy)
 predy_meow2 = meow2.predict(testx)
 print("The R2 Score after using Catboost with MAE is:",r2_score(testy,predy_meow2))
+
+# To see which features influenced the house prices most:
+print(meow1.get_feature_importance(prettified=True))
+
+'''
+
+MAE model is more robust to outliers. If your house price data had extreme "outlier" mansions, 
+the MAE model would likely be more stable, even if its R2 is slightly lower.
+
+'''
