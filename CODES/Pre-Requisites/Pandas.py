@@ -65,24 +65,26 @@ We can use multiple arguments with our dataset:
 
 1. The variable.dropna(inplace = True) function will remove all the rows with null values.
 
-2. The variable.fillna(number, inplace = True) will replace empty cells with a value. It can also replace values for specified columns with a 
-specified number.
+2. The variable.fillna(number, inplace = True) will replace empty cells with a value. It can also replace 
+values for specified columns with a specified number.
 
 3. A common way to replace empty cells is to calculate mean, median and mode of the columns.
 
-4. variable.replace(new_val, old_val, inplace = TRUE) : This will change the value at the location, it was given. We can also set conditions to
-manupilate our data.
+4. variable.replace(new_val, old_val, inplace = TRUE) : This will change the value at the location, it 
+was given. We can also set conditions to manupilate our data.
 
 5. The variable.drop_duplicates(inplace = True) function will remove all the duplicates from the dataset.
 
 6. the variable.isna().mean()*100 function will tell you the percentage of null values in dataset.
 
-7. If there are multiple arrays in a dataset, we can use the variable.astype() function to convert them into a single datatype.
+7. If there are multiple arrays in a dataset, we can use the variable.astype() function to convert them 
+into a single datatype.
 
-8. If there are multiple arrays in a dataset having different keys (columns), we can use 'columns' parameter to set the columns we want 
-in our dataframe.
+8. If there are multiple arrays in a dataset having different keys (columns), we can use 'columns' 
+parameter to set the columns we want in our dataframe.
 
-9. We can use the variable.shape function to get the number of rows and columns in our dataframe made from our dataset.
+9. We can use the variable.shape function to get the number of rows and columns in our dataframe made 
+from our dataset.
 
 10. In some datasets, the data is defined in a different array and the labels are defined in a different array.
 Then we use the 'data' and 'columns' parameters to set the data and columns of our dataframe.
