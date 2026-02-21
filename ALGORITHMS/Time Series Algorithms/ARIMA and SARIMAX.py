@@ -53,7 +53,7 @@ If ADF Statistic > critical value, Fail to reject H₀ → The data is not stati
 
 # p-value : 0.3639 so data is not stationary.
 
-# Differencing: Conveting data to stationary:
+# Differencing: Converting data to stationary:
 
 df["Seasonal first difference"] = df["Sales"] - df["Sales"].shift(12) 
 # The dataset is of two years of sales so it will have seasonal shifts of 12 months.
