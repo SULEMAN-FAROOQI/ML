@@ -81,8 +81,6 @@ for value, label in zip(Seasonal_test_res[:4], labels):
 
 # Determining the values of p , d and q:
 
-'''
-
 fig = plt.figure(figsize=(12, 8))
 
 ax1 = fig.add_subplot(211)
@@ -101,8 +99,6 @@ fig = plot_pacf(
 
 plt.show()
 
-'''
-
 # The value of p can be specified from pacf plot. 
 # The value of q can be best specified from acf plot.
 # We only shifted our data 1 time so d = 1
@@ -114,12 +110,12 @@ results1 = arm.fit()
 df['forecast1'] = results1.predict(start=70, end=103, dynamic=True)
 plt.figure(figsize=(12, 8))
 plt.plot(df["Month"], df["Sales"], label="Actual Sales")
-plt.plot(df["Month"], df["forecast1"], label="Forecast", color='red')
+plt.plot(df["Month"], df["forecast1"], label="Arima Forecast", color='red')
 plt.legend()
 
 # As we can see the arima model is not very good on seasonal data so now we will use sarima model.
 
-# P=1, D=1, Q=1, s=12 (Seasonal cycle)
+# P=1, D=1, Q=0, s=12 (Seasonal cycle)
 sarm = SARIMAX(df['Sales'], 
                 order=(1, 1, 0), 
                 seasonal_order=(1, 1, 0, 12))
@@ -131,7 +127,7 @@ df['forecast2'] = results2.predict(start=70, end=103, dynamic=True)
 
 plt.figure(figsize=(12, 8))
 plt.plot(df["Month"], df["Sales"], label="Actual Sales")
-plt.plot(df["Month"], df["forecast2"], label="Forecast", color='red')
+plt.plot(df["Month"], df["forecast2"], label="Sarima Forecast", color='red')
 plt.legend()
 
 plt.show()
