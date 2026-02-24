@@ -16,7 +16,7 @@ df["Month"] = pd.to_datetime(df["Month"])
 # plt.plot(df["Month"],df["Sales"])
 # plt.show()
 
-# To check If the data is stationary, we find p-value. if p-value < 0.05 then data is stationary
+# In order to apply arima and sarima we need to check If the data is stationary, we find p-value. if p-value < 0.05 then data is stationary
 
 '''
 
