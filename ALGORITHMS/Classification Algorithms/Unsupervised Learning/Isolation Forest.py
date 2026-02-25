@@ -29,3 +29,18 @@ predy_ifr = np.where(predy_ifr == -1, 1, 0)
 print("The Accuracy score after using Isolation forest for anamoly detection is:",accuracy_score(testy,predy_ifr))
 
 # pip install eif remember search when it can support python 3.13
+
+# 1. Define your new data as a 2D array (Isolation Forest expects a matrix)
+new_data = np.array([[46.7954605564706, 6, 713, 368, 3.8861758621572413, 0, 0]])
+
+# 2. Scale the data using the ALREADY fitted scaler
+# Crucial: Use .transform(), NOT .fit_transform()
+new_data_scaled = scaler.transform(new_data)
+
+# 3. Predict
+prediction = ifr.predict(new_data_scaled)
+
+# 4. Map the result (just like you did for the test set)
+is_fraud = "Fraud (Anomaly)" if prediction[0] == -1 else "Normal"
+
+print("Prediction:",is_fraud)
