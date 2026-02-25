@@ -1,7 +1,5 @@
 # Train Test Split Functionality:
 
-'''
-
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
@@ -22,7 +20,10 @@ scaler = StandardScaler()
 x_std = scaler.fit_transform(x)
 y_std = scaler.fit_transform(y)
 
-trainx, testx, trainy, testy = train_test_split(x,y, test_size=0.3, random_state=7)
+trainx, testx, trainy, testy = train_test_split(x,y, test_size=0.3, random_state=7, stratify=y)
+
+# stratify=y (where y is your target variable), it ensures that the resulting train and test subsets have the same proportion 
+# of class labels as the original dataset.
 
 print(x_std.shape)
 print(trainx.shape)
@@ -31,5 +32,3 @@ print(testx.shape)
 print(y_std.shape)
 print(trainy.shape)
 print(testy.shape)
-
-'''
