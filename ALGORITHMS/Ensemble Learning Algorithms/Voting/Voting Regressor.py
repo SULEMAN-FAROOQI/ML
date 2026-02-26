@@ -24,6 +24,7 @@ for estimator in estimators:
     print("The cross val score for",estimator[0],"is",np.mean(z))
 
 '''
+
 vote = VotingRegressor(estimators=estimators)
 k = cross_val_score(vote,x,y,cv=10,scoring="r2")
 print("The R2 score after cross validation with Voting Regressor is",np.mean(k))
