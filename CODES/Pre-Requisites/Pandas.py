@@ -234,4 +234,7 @@ print(df.head())
 prof = ProfileReport(df)
 prof.to_file(output_file="data.html")
 
+import webbrowser
+webbrowser.open("data.html")
+
 '''
