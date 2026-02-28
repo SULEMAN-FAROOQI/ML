@@ -1,2 +1,4 @@
 Main/
 Internship Tasks/
+__pycache__/
+*.pyc/
