@@ -9,3 +9,4 @@ data = pd.read_csv("Datasets\\PJME_hourly.csv")
 
 pal = sns.color_palette()
 data.plot(style=".", figsize=(10,5), color = pal[0], title="PJME")
+plt.show()
