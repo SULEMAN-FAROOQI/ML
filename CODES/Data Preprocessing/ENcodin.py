@@ -8,9 +8,8 @@ For encoding feature variable, we will use OrdianlEncoder and For encoding targe
 
 # Example both Label Encoding and Ordinal Encoding:
 
-'''
+'''`
 
-from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import LabelEncoder, OrdinalEncoder
 import pandas as pd
 
