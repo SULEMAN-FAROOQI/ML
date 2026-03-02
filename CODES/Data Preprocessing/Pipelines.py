@@ -34,7 +34,7 @@ x = make_column_transformer(
 k = SelectKBest(score_func=chi2, k = 9)
 t = DecisionTreeClassifier()
 
-pipeline = make_pipeline(x , k , t)
+pipeline = make_pipeline(x,k,t)
 
 pipeline.fit(trainx, trainy)
 predy = pipeline.predict(testx)
