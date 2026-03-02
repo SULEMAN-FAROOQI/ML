@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score
 
 x , y = load_iris(return_X_y=True, as_frame=True)
 
-print(y)
+# print(y)
 
 # Elbow Method:
 
@@ -36,4 +36,3 @@ km = KMeans(n_clusters=3)
 km.fit(trainx,trainy)
 predy = km.predict(testx)
 print("The Accuracy score after K means clustering is:",accuracy_score(testy,predy))
-
