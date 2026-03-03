@@ -15,6 +15,8 @@ log4 = LogisticRegression(solver="sag") # Closer to GD
 log5 = LogisticRegression(solver="saga") # Closer to GD
 log6 = LogisticRegression(solver="liblinear") # Hybrid
 
+# Another Hyperparameter C is used for Regularization.
+
 x , y = load_breast_cancer(return_X_y=True,as_frame=True)
 
 plt.scatter(x['worst concave points'] , x['worst perimeter'], c=y,cmap="coolwarm")
