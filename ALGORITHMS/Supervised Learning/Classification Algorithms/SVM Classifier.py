@@ -35,7 +35,7 @@ Types of Kernels:
 
 svc1 = SVC(kernel="linear") 
 svc2 = SVC(kernel="poly",degree=3,gamma=0.1) 
-svc3 = SVC(kernel="rbf") 
+svc3 = SVC(kernel="rbf") # Hyperparameter gamma can only be applied to rbf to smoothe the decision boundary.
 svc4 = SVC(kernel="sigmoid") # Unstable 
 # svc5 = SVC(kernel="precomputed") 
 
