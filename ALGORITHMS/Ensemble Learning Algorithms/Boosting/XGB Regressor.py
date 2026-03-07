@@ -19,7 +19,7 @@ trainx , testx , trainy, testy = train_test_split(x,y, test_size=0.3, random_sta
 '''
 
 XGBRegressor (Gradient Boosting): Builds trees sequentially to correct the errors (residuals) of
-previous trees by minimizing a regression loss function.
+previous trees by minimizing a regression loss function. xgb also has a built in function for cross validation.
 
 Common Hyperparameters for XGBRegressor:
 

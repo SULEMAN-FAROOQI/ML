@@ -12,7 +12,7 @@ trainx , testx , trainy, testy = train_test_split(x,y, test_size=0.3, random_sta
 '''
 
 XGBClassifier (Gradient Boosting): Builds trees sequentially to correct the errors of previous trees
-by minimizing a classification loss function.
+by minimizing a classification loss function. xgb also has a built in function for cross validation.
 
 Common Hyperparameters for XGBClassifier:
 
