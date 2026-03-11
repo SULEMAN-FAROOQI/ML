@@ -42,7 +42,7 @@ Common Hyperparameters for XGBRegressor:
    The fraction of features (columns) used when building each tree.
 
 6. gamma:
-   Minimum loss reduction required to make a split. Higher values make the model more conservative.
+   Minimum loss reduction required to make a split. Higher values make the model more conservative. 
 
 7. min_child_weight:
    Minimum sum of Hessians (second-order gradients) needed in a child node. Larger values prevent
