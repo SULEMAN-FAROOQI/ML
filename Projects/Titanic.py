@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 
 dataframe = pd.read_csv("Datasets\\titanic.csv")
 dataframe.drop(columns=["PassengerId","Name","Ticket","Cabin"], inplace=True)
-# print(dataframe.head())
+print(dataframe.head())
 
 trainx , testx , trainy , testy = train_test_split(dataframe.drop(columns=['Survived']), dataframe["Survived"] , test_size=0.3 , random_state=30)
 
@@ -31,3 +31,19 @@ pipeline.fit(trainx, trainy)
 predy = pipeline.predict(testx)
 print("The accuracy score is: " +str(accuracy_score(testy,predy)))
 print("After cross validation our score is: " +str(np.mean(cross_val_score(pipeline, trainx ,trainy , cv=10, scoring='accuracy'))))
+
+# Create a DataFrame instead of a NumPy array
+new_data = pd.DataFrame([{
+    "Pclass": 3,
+    "Sex": "male",
+    "Age": 34.5,
+    "SibSp": 0,
+    "Parch": 0,
+    "Fare": 7.8292,
+    "Embarked": "Q"
+}])
+
+prediction = pipeline.predict(new_data)
+
+Survival_status = "Bach Gaya" if prediction[0] == 1 else "Mar Gaya"
+print("Prediction:", Survival_status)
