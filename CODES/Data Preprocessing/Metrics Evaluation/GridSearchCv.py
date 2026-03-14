@@ -46,3 +46,47 @@ best_model = grid.best_estimator_
 print("Best Params:", grid.best_params_)
 print("CV Accuracy:", grid.best_score_)
 print("Test Accuracy:", accuracy_score(testy, best_model.predict(testx)))
+
+# For Regression with Pipeline:
+
+'''
+
+import pandas as pd
+import xgboost as xgb
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+from sklearn.datasets import load_diabetes
+
+x , y = load_diabetes(return_X_y=True, as_frame=True)
+
+pipeline = Pipeline([
+    ("scaler", StandardScaler()), 
+    ("xgb", xgb.XGBRegressor())
+])
+
+# Define the hyperparameter grid for GridSearchCV Search
+# Double underscores (__) are used to target the parameters of 'xgb' in the pipeline
+param = {
+    'xgb__subsample': [0.05,0.1,0.5,1],
+    'xgb__max_depth': [2,3,5,8],
+    'xgb__colsample_bytree': [0.05,0.1,0.5,1]
+}
+
+grid = GridSearchCV(
+    estimator=pipeline,
+    param_grid=param, 
+    scoring='r2', 
+    cv=4,
+    n_jobs=-1
+)
+
+# Fit the model to the data
+grid.fit(x, y)
+
+# Optional: Print the best score and parameters found
+print(f"Best Score: {grid.best_score_}")
+print(f"Best Parameters: {grid.best_params_}")
+
+'''
