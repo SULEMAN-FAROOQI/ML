@@ -80,6 +80,8 @@ print("The Classification report after using liblinear is:\n",classification_rep
 
 # Decision Boundries Plot:
 
+'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -98,3 +100,5 @@ predy = log.predict(testx)
 
 plot_decision_regions(trainx,trainy,clf=log)
 plt.show()
+
+'''

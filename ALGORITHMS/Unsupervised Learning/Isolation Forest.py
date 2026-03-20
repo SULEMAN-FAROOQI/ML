@@ -5,6 +5,9 @@ from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
+import warnings
+
+warnings.filterwarnings("ignore")
 
 scaler = StandardScaler()
 
@@ -31,7 +34,7 @@ print("The Accuracy score after using Isolation forest for anamoly detection is:
 # pip install eif remember search when it can support python 3.13
 
 # 1. Define your new data as a 2D array (Isolation Forest expects a matrix)
-new_data = np.array([[46.7954605564706, 6, 713, 368, 3.8861758621572413, 0, 0]])
+new_data = np.array([[146.7954605564706, 6, 1713, 368, 9.8861758621572413, 8, 78]])
 
 # 2. Scale the data using the ALREADY fitted scaler
 # Crucial: Use .transform(), NOT .fit_transform()
