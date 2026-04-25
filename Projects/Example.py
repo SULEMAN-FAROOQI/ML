@@ -1,3 +1,5 @@
+# This code represnets an example of a ML workflow. It predicts wheteher a student will be apponited in a company based on his GPA.
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

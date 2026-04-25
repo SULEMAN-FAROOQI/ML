@@ -1,3 +1,5 @@
+# This code represnets an example of a ML workflow. It predicts wheteher a person will survive the titanic accident based on their circumstances.
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split , cross_val_score
@@ -45,5 +47,5 @@ new_data = pd.DataFrame([{
 
 prediction = pipeline.predict(new_data)
 
-Survival_status = "Bach Gaya" if prediction[0] == 1 else "Mar Gaya"
+Survival_status = "Survived" if prediction[0] == 1 else "Died"
 print("Prediction:", Survival_status)
