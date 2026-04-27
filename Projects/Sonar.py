@@ -1,3 +1,5 @@
+# This code represnets an example of a ML workflow. It predicts wheteher a submarine will encounter mine or a rock based on certain parameters and values.
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split , cross_val_score
