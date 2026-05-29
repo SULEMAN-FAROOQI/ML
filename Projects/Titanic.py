@@ -17,7 +17,7 @@ print(dataframe.head())
 trainx , testx , trainy , testy = train_test_split(dataframe.drop(columns=['Survived']), dataframe["Survived"] , test_size=0.3 , random_state=30)
 
 x = make_column_transformer(
-    (SimpleImputer(strategy="most_frequent"), ["Age"]),
+    (SimpleImputer(strategy="mean"), ["Age"]),
     (SimpleImputer(strategy="mean"), ["Fare"]),
     (OneHotEncoder(categories=[["male", "female"]], sparse_output=False, handle_unknown='ignore'), ["Sex"]),
     (OneHotEncoder(categories=[["S", "Q", "C"]], sparse_output=False, handle_unknown='ignore'), ["Embarked"]),
@@ -25,7 +25,7 @@ x = make_column_transformer(
     remainder="passthrough"
 )
 
-t = DecisionTreeClassifier()
+t = DecisionTreeClassifier(max_depth=5, min_samples_split=10, min_samples_leaf=5, random_state=30)
 
 pipeline = make_pipeline(x,t)
 
@@ -49,3 +49,20 @@ prediction = pipeline.predict(new_data)
 
 Survival_status = "Survived" if prediction[0] == 1 else "Died"
 print("Prediction:", Survival_status)
+
+# More Validation:
+
+'''
+
+test_cases = [
+    {"Pclass": 1, "Sex": "female", "Age": 25, "SibSp": 0, "Parch": 0, "Fare": 100, "Embarked": "S"},  # → Should Survive
+    {"Pclass": 3, "Sex": "male",   "Age": 40, "SibSp": 0, "Parch": 0, "Fare": 7.8, "Embarked": "Q"},  # → Should Die
+    {"Pclass": 2, "Sex": "female", "Age": 10, "SibSp": 1, "Parch": 1, "Fare": 30,  "Embarked": "C"},  # → Should Survive
+    {"Pclass": 3, "Sex": "male",   "Age": 60, "SibSp": 0, "Parch": 0, "Fare": 10,  "Embarked": "S"},  # → Should Die
+]
+
+for case in test_cases:
+    pred = pipeline.predict(pd.DataFrame([case]))
+    print(f"{case['Sex']}, Class {case['Pclass']}, Age {case['Age']} → {'Survived' if pred[0]==1 else 'Died'}")
+    
+'''
