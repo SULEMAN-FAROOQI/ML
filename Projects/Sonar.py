@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split , cross_val_score
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
@@ -37,7 +37,13 @@ z = make_column_transformer(
     remainder="passthrough"
 )
 
-log = LogisticRegression(solver = "saga", max_iter=1000)
+log = SVC(
+    kernel = 'rbf',     
+    C      = 100,      
+    gamma  = 'scale',  
+    shrinking = True,   
+    tol    = 0.0001    
+)
 
 pipe = make_pipeline(z,log)
 
@@ -61,5 +67,5 @@ new_data = pd.DataFrame([dict(zip(column_names, data))])
 
 prediction = pipe.predict(new_data)
 
-result = "Mine" if prediction[0] == '0' else "Rock"
+result = "Mine" if prediction[0] == 0 else "Rock"
 print("Prediction:", result)
