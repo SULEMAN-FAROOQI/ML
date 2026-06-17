@@ -1,3 +1,7 @@
+# This code represnets an example of a ML workflow. It predicts the median house value based on various features of the housing data. 
+# The workflow includes data preprocessing, feature engineering, model training, and evaluation using R2 score and cross-validation. 
+# Finally, it demonstrates how to make a prediction for a new input data point.
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd

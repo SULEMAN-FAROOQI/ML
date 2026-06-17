@@ -1,4 +1,4 @@
-# # This code represnets an example of a ML workflow. It predicts wheteher a female has diabetes or not based on certain parameters like blood and glucose level.
+# This code represnets an example of a ML workflow. It predicts wheteher a female has diabetes or not based on certain parameters like blood and glucose level.
 
 import numpy as np
 import pandas as pd
