@@ -2,5 +2,6 @@ Main/
 Internship Tasks/
 __pycache__/
 *.pyc/
+*.gitattributes/
 
 # To download another person file from github use: git clone repo-link
