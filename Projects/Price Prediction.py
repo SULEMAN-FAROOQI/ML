@@ -13,11 +13,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import cross_val_score, train_test_split
 
-<<<<<<< HEAD
 data = pd.read_csv('Datasets\\housing.csv')
-=======
-data = pd.read_csv('Datasets/housing.csv')
->>>>>>> f9ab42a2562790b6363778d72448ff0d6706fed2
 
 x = data.drop("median_house_value", axis=1)
 y = data["median_house_value"]

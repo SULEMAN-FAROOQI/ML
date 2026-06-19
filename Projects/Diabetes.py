@@ -15,11 +15,7 @@ from sklearn.ensemble import ExtraTreesRegressor
 import warnings
 warnings.filterwarnings('ignore')
 
-<<<<<<< HEAD
 df = pd.read_csv("Datasets\\diabetes.csv")
-=======
-df = pd.read_csv("C:\\Users\\sulem\\Desktop\\Codes\\ML\\Datasets\\diabetes.csv")
->>>>>>> f9ab42a2562790b6363778d72448ff0d6706fed2
 df.rename(columns={'Outcome': 'Diagnosis'}, inplace=True)
 
 # print(df.head())
