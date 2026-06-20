@@ -115,6 +115,8 @@ z = Command when condition is false
 
 15. df["column name"].apply(func) : Used to apply function on a column 
 
+datset.duplicated().sum() : Used to check the number of duplicate rows in the dataset.
+
 Example:
 
 import pandas as pd
