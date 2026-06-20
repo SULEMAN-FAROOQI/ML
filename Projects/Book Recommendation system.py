@@ -1,4 +1,4 @@
-# This code represnets an example of a ML workflow. It recommends different books on their similarities and user ratings.
+# This code represnets an example of a ML workflow. It recommends different books on their similarities with other books and user ratings.
 
 import numpy as np
 import pandas as pd
