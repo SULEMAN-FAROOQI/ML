@@ -25,7 +25,7 @@ model = ets.fit()
 forecast = model.get_prediction(start=len(df), end=len(df)+23)
 forecast_df = forecast.summary_frame(alpha=0.05)
 
-plt.figure(figsize=(15, 6)) 
+plt.figure(figsize=(12, 6)) 
 
 plt.subplot(1, 2, 1) # 1 row, 2 columns, index 1
 plt.plot(df.index, df["Sales"]) # Using index if it's a DateTimeIndex
