@@ -16,9 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
 from sklearn.compose import make_column_transformer
-from sklearn.metrics import accuracy_score , precision_score # Precision store is important when working with Imbalanced data.
-
-import nltk
+from sklearn.metrics import accuracy_score , precision_score # Precision score is important when working with Imbalanced data.
 
 def ensure_nltk_data():
     resources = {

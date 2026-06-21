@@ -1,3 +1,5 @@
+# This code represnets an example of a ML workflow. It predicts the sales price of a car based on its certain parameters.
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import make_column_transformer
