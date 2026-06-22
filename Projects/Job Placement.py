@@ -15,7 +15,7 @@ scaler = StandardScaler()
 label = LabelEncoder()
 logrg = LogisticRegression()
 
-data = pd.read_csv("Datasets\\example.csv")
+data = pd.read_csv("Datasets\\Job.csv")
 dataset = pd.DataFrame(data)
 
 dataset["Status"] = label.fit_transform(dataset["Placement_Status"])
