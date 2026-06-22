@@ -68,4 +68,4 @@ new_data = pd.DataFrame([dict(zip(column_names, data))])
 prediction = pipe.predict(new_data)
 
 result = "Mine" if prediction[0] == 0 else "Rock"
-print("Prediction:", result)
+print("The Submarine encountered a:", result)

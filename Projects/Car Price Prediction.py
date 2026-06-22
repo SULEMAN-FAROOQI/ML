@@ -52,4 +52,4 @@ data = {
 
 new_data = pd.DataFrame(data)
 prediction = pipe.predict(new_data)
-print("Predicted Car value: " + str(prediction[0]), "Million $")
+print("Predicted Car value for Wagon R 2011 is: " + str(prediction[0]), "Thousand $")
