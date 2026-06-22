@@ -108,6 +108,7 @@ results1 = arm.fit()
 
 # Now plot the forecast against the real data
 df['forecast1'] = results1.predict(start=70, end=103, dynamic=True)
+
 plt.figure(figsize=(12, 8))
 plt.plot(df["Month"], df["Sales"], label="Actual Sales")
 plt.plot(df["Month"], df["forecast1"], label="Arima Forecast", color='red')

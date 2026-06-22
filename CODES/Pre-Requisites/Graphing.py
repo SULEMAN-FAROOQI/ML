@@ -456,3 +456,5 @@ sns.relplot(data= datasets, x="total_bill", y = "tip",
 plt.show()
 
 '''
+
+# sns.pairplot(df, hue = "target") To visualize every columns relation with every other column in the dataset.
