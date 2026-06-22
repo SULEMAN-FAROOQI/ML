@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
-from sklearn.preprocessing import StandardScaler, FunctionTransformer
+from sklearn.preprocessing import StandardScaler
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
-from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.linear_model import Ridge
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
@@ -16,65 +16,56 @@ data = pd.read_csv("Datasets\\gld_price_data.csv")
 # print(data.head())
 # print(data.describe())
 
-x = data.drop(columns=["GLD"])
-y = data["GLD"]
+def ColumnTransformation(data):
+    data["GLD_lag1"]  = data["GLD"].shift(1)   # yesterday's GLD price
+    data["GLD_lag2"]  = data["GLD"].shift(2)   # 2 days ago GLD price
+    data["GLD_lag3"]  = data["GLD"].shift(3)   # 3 days ago GLD price
+    data["GLD_lag5"]  = data["GLD"].shift(5)   # 5 days ago GLD price
+    data["SLV_lag1"]  = data["SLV"].shift(1)   # yesterday's SLV price
+    data["SLV_lag2"]  = data["SLV"].shift(2)   # 2 days ago SLV price
+    data["GLD_ma5"]   = data["GLD"].rolling(5).mean()    # average of last 5 days GLD
+    data["GLD_ma20"]  = data["GLD"].rolling(20).mean()   # average of last 20 days GLD
+    data = data.drop(columns = ["Date"])
+    data = data.dropna()
+    return data
 
-trainx , testx , trainy , testy = train_test_split(x, y, test_size=0.3, random_state=33)
+Data = ColumnTransformation(data)
 
-def DateRemover(df):
-    return df.drop("Date", axis = 1)
+x = Data.drop(columns = ["GLD"])
+y = Data["GLD"]
 
-f = FunctionTransformer(DateRemover)
+trainx , testx , trainy , testy = train_test_split(x, y, test_size=0.3, random_state=33, shuffle=False) # For time series
 
 z = make_column_transformer(
-    (StandardScaler() , ["SPX", "USO", "SLV", "EUR/USD"]),
+    (StandardScaler(), ["SPX", "USO", "SLV", "EUR/USD",
+                        "GLD_lag1", "GLD_lag2", "GLD_lag3", "GLD_lag5",
+                        "SLV_lag1", "SLV_lag2",
+                        "GLD_ma5", "GLD_ma20"]),
     remainder="passthrough"
 )
-
-class BGDRegressor(BaseEstimator, RegressorMixin):
     
-    def __init__(self,learning_rate=0.01,epochs=1000):
-        
-        self.coef_ = None
-        self.intercept_ = None
-        self.lr = learning_rate
-        self.epochs = epochs
-        
-    def fit(self,X_train,y_train):
+m = Ridge(alpha=0.0144)
 
-        X_train = np.array(X_train)
-        y_train = np.array(y_train)
-    
-        self.intercept_ = 0
-        self.coef_ = np.ones(X_train.shape[1])
-        
-        for i in range(self.epochs):
-        
-            y_hat = np.dot(X_train,self.coef_) + self.intercept_
-
-            intercept_der = -2 * np.mean(y_train - y_hat)
-            self.intercept_ = self.intercept_ - (self.lr * intercept_der)
-            
-            coef_der = -2 * np.dot((y_train - y_hat),X_train)/X_train.shape[0]
-            self.coef_ = self.coef_ - (self.lr * coef_der)
-    
-    def predict(self,X_test):
-        return np.dot(X_test,self.coef_) + self.intercept_
-    
-m = BGDRegressor()
-
-pipe = make_pipeline(f,z,m)
+pipe = make_pipeline(z,m)
 
 pipe.fit(trainx,trainy)
 predy = pipe.predict(testx)
-print("The R2 score after Batch Gradient Descent is:",(r2_score(testy,predy)))
+print("The R2 score after Ridge Regression is:",(r2_score(testy,predy)))
 
 new_data = pd.DataFrame({
-    "Date":    ["1/2/2008"],
-    "SPX":     [1447.160034],
-    "USO":     [78.470001],
-    "SLV":     [15.18],
-    "EUR/USD": [1.471692]
+    "Date": ["1/2/2008"],
+    "SPX":[1447.160034],
+    "USO":[78.470001],
+    "SLV":[15.18],
+    "EUR/USD":[1.471692],
+    "GLD_lag1":[84.86],
+    "GLD_lag2":[84.70],
+    "GLD_lag3":[84.55],
+    "GLD_lag5":[84.20],
+    "SLV_lag1":[15.10],
+    "SLV_lag2":[15.05],
+    "GLD_ma5":[84.60],
+    "GLD_ma20":[83.90]
 })
 
 prediction = pipe.predict(new_data) 
