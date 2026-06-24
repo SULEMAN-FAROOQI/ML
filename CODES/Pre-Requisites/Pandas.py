@@ -240,3 +240,13 @@ import webbrowser
 webbrowser.open("data.html")
 
 '''
+
+'''
+
+Rule of thumb:
+
+90% zeros → investigate.
+95–99% zeros → often removable unless domain knowledge suggests otherwise.
+100% same value → definitely remove.
+
+'''

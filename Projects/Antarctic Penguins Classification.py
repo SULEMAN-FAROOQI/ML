@@ -5,7 +5,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.compose import make_column_transformer
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import ExtraTreesRegressor , ExtraTreesClassifier
-from sklearn.model_selection import train_test_split , cross_val_score
+from sklearn.model_selection import train_test_split 
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 import warnings
