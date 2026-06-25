@@ -35,7 +35,19 @@ z = make_column_transformer(
     remainder="passthrough"
 )
 
-m = XGBRegressor(n_estimators=248, max_depth=4, learning_rate=0.05, subsample=0.8, colsample_bytree=0.75)
+m = XGBRegressor(
+    n_estimators=458,
+    max_depth=8,
+    learning_rate=0.0074,
+    subsample=0.586,
+    colsample_bytree=0.957,
+    min_child_weight=7,
+    gamma=0.215,
+    reg_alpha=0.00046,
+    reg_lambda=0.418,
+    random_state=42,
+    verbosity=0
+)
 
 pipe = make_pipeline(z,m)
 
@@ -43,3 +55,21 @@ pipe.fit(trainx,trainy)
 predy = pipe.predict(testx)
 print("The R2 Score is:",r2_score(testy,predy))
 
+new_data = pd.DataFrame({
+    'IND'      : [0],
+    'RAIN'     : [5.8],
+    'IND.1'    : [0.0],
+    'T.MAX'    : [16.1],
+    'IND.2'    : [0.0],
+    'T.MIN'    : [3.7],
+    'T.MIN.G'  : [-0.2],
+    'WIND_lag1': [5.21],
+    'WIND_lag3': [8.71],
+    'WIND_ma5' : [6.842],
+    'WIND_ma10': [7.188],
+    'year'     : [1961],
+    'dayofyear': [101]
+})
+
+prediction = pipe.predict(new_data)
+print("The Speed of wind is:",prediction)
