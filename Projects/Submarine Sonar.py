@@ -9,10 +9,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import make_pipeline
 from sklearn.compose import make_column_transformer
+from sklearn.decomposition import PCA
 import warnings
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv("C:\\Users\\sulem\\Desktop\\Codes\\ML\\Datasets\\sonar data.csv", header = None)
+df = pd.read_csv("Datasets\\sonar data.csv", header = None)
 df = df.rename(columns={60: "Target"})
 new_col = [f"x{i+1}" for i in range(60)]
 new_col.append("Target")
@@ -37,6 +38,8 @@ z = make_column_transformer(
     remainder="passthrough"
 )
 
+p = PCA(n_components=0.85)
+
 log = SVC(
     kernel = 'rbf',     
     C      = 100,      
@@ -45,7 +48,7 @@ log = SVC(
     tol    = 0.0001    
 )
 
-pipe = make_pipeline(z,log)
+pipe = make_pipeline(z,p,log)
 
 pipe.fit(trainx, trainy)
 predy = pipe.predict(testx)
@@ -68,4 +71,4 @@ new_data = pd.DataFrame([dict(zip(column_names, data))])
 prediction = pipe.predict(new_data)
 
 result = "Mine" if prediction[0] == 0 else "Rock"
-print("The Submarine encountered a:", result)
+print("The Submarine encountered a",result)
