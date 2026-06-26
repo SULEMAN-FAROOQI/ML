@@ -5,3 +5,4 @@ __pycache__/
 *.gitattributes/
 
 # To download another person file from github use: git clone repo-link
+Datasets/weather.csv

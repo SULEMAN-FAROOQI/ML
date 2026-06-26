@@ -25,7 +25,12 @@ def ColumnTransformation(data):
     data["SLV_lag2"]  = data["SLV"].shift(2)   # 2 days ago SLV price
     data["GLD_ma5"]   = data["GLD"].rolling(5).mean()    # average of last 5 days GLD
     data["GLD_ma20"]  = data["GLD"].rolling(20).mean()   # average of last 20 days GLD
-    data = data.drop(columns = ["Date"])
+
+    data["DATE"] = pd.to_datetime(data["Date"])
+    data["day"]   = data["DATE"].dt.day
+    data["month"] = data["DATE"].dt.month
+    data["year"]  = data["DATE"].dt.year
+    data = data.drop(columns=["Date", "DATE"])  
     data = data.dropna()
     return data
 
@@ -40,10 +45,11 @@ z = make_column_transformer(
     (StandardScaler(), ["SPX", "USO", "SLV", "EUR/USD",
                         "GLD_lag1", "GLD_lag2", "GLD_lag3", "GLD_lag5",
                         "SLV_lag1", "SLV_lag2",
-                        "GLD_ma5", "GLD_ma20"]),
-    remainder="passthrough"
+                        "GLD_ma5", "GLD_ma20",
+                        "day", "month", "year"]),  
+    remainder="drop"
 )
-    
+
 m = Ridge(alpha=0.0144)
 
 pipe = make_pipeline(z,m)
@@ -65,7 +71,10 @@ new_data = pd.DataFrame({
     "SLV_lag1":[15.10],
     "SLV_lag2":[15.05],
     "GLD_ma5":[84.60],
-    "GLD_ma20":[83.90]
+    "GLD_ma20":[83.90],
+    "day":[2],
+    "month":[1],
+    "year":[2008]
 })
 
 prediction = pipe.predict(new_data) 

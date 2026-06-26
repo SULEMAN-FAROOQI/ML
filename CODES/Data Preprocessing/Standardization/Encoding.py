@@ -1,3 +1,8 @@
+# Unique count  |  Action
+# < 20          |  Keep → OneHotEncode it
+# 20 – 200      |  Maybe keep → use Target Encoding
+# 200+          |  Drop → not worth it
+
 # ORDINAL ENCODING:
 
 '''
