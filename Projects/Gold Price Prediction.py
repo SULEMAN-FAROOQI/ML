@@ -23,8 +23,8 @@ def ColumnTransformation(data):
     data["GLD_lag5"]  = data["GLD"].shift(5)   # 5 days ago GLD price
     data["SLV_lag1"]  = data["SLV"].shift(1)   # yesterday's SLV price
     data["SLV_lag2"]  = data["SLV"].shift(2)   # 2 days ago SLV price
-    data["GLD_ma5"]   = data["GLD"].rolling(5).mean()    # average of last 5 days GLD
-    data["GLD_ma20"]  = data["GLD"].rolling(20).mean()   # average of last 20 days GLD
+    data["GLD_ma5"]  = data["GLD"].shift(1).rolling(5).mean()
+    data["GLD_ma20"] = data["GLD"].shift(1).rolling(20).mean()
 
     data["DATE"] = pd.to_datetime(data["Date"])
     data["day"]   = data["DATE"].dt.day
@@ -39,7 +39,7 @@ Data = ColumnTransformation(data)
 x = Data.drop(columns = ["GLD"])
 y = Data["GLD"]
 
-trainx , testx , trainy , testy = train_test_split(x, y, test_size=0.3, random_state=33, shuffle=False) # For time series
+trainx , testx , trainy , testy = train_test_split(x, y, test_size=0.3, shuffle=False) # For time series
 
 z = make_column_transformer(
     (StandardScaler(), ["SPX", "USO", "SLV", "EUR/USD",

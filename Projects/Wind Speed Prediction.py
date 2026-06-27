@@ -72,4 +72,4 @@ new_data = pd.DataFrame({
 })
 
 prediction = pipe.predict(new_data)
-print("The Speed of wind is:",prediction)
+print("The Speed of wind is:",prediction[0])
