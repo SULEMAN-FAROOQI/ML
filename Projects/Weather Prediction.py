@@ -88,4 +88,4 @@ new_data = pd.DataFrame({
 })
 
 prediction = pipe.predict(new_data)
-print("The Residents of",new_data["station_name"].values[0],"experienced",label.inverse_transform(prediction)[0],"weather on",new_data["date_str"].values[0],".")
+print("The Residents of",new_data["station_name"].values[0],"experienced",label.inverse_transform(prediction)[0],"weather on",new_data["date_str"].values[0])

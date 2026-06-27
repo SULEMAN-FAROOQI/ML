@@ -3,15 +3,13 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler , FunctionTransformer
 from sklearn.pipeline import make_pipeline
 from sklearn.compose import make_column_transformer
-from sklearn.model_selection import train_test_split , cross_val_score , GridSearchCV
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split , cross_val_score 
+from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
-from sklearn.experimental import enable_iterative_imputer
-from sklearn.impute import IterativeImputer
-from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.impute import KNNImputer
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -25,8 +23,14 @@ df.rename(columns={'Outcome': 'Diagnosis'}, inplace=True)
 x = df.drop("Diagnosis", axis = 1)
 y = df["Diagnosis"]
 
-columnx = x.columns.tolist()
-df[['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']].replace(0, np.nan)
+def ColumnTransformation(df):
+    df = df.copy() 
+    df[['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']] = df[['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']].replace(0, np.nan)
+    df['BMI_Glucose'] = df['BMI'] * df['Glucose']
+    df['Age_Pregnancies'] = df['Age'] * df['Pregnancies']
+    return df
+
+f = FunctionTransformer(ColumnTransformation)
 
 # Plotting each column to check linearity
 
@@ -40,6 +44,7 @@ for i in range(x.shape[1] - 1):
     plt.show()
 
 '''
+# By the Figures we deduce that the data is non linear so,
 
 # print(y.value_counts())
 
@@ -47,60 +52,32 @@ trainx , testx , trainy , testy = train_test_split(x,y , stratify=y, random_stat
 
 z = make_column_transformer(
     (make_pipeline(
-        IterativeImputer(estimator=ExtraTreesRegressor(n_estimators=10, random_state=33), 
-                 max_iter=10, random_state=33),
+        KNNImputer(n_neighbors=5), # Missing values in medical data tend to cluster (e.g. obese patients have similar glucose/insulin patterns), which KNN captures well.
         StandardScaler()
-    ), columnx),
+    ), ColumnTransformation(x).columns.tolist()),
     remainder="passthrough"
 )
 
-# By the Figures we deduce that the data is non linear so,
-
-'''
-
-param = {
-    'n_estimators':     [150, 200, 250],
-    'max_depth':        [4, 5, 6],          # tighter around 5
-    'learning_rate':    [0.005, 0.01, 0.05], # tighter around 0.01
-    'subsample':        [0.8, 0.9, 1.0],
-    'colsample_bytree': [0.8, 0.9, 1.0],
-    'gamma':            [0, 0.05, 0.1]       # tighter around 0
-}
-
-grid = GridSearchCV(
-    XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=33),
-    param,
-    cv=5,
-    scoring="accuracy",
-    n_jobs=-1,
-    verbose=1
-)
-
-grid.fit(trainx, trainy)
-
-print("Best Params:", grid.best_params_)
-print("CV Accuracy:", grid.best_score_)
-
-'''
-
 m = XGBClassifier(
-    colsample_bytree  = 1.0,
-    gamma             = 0.1,  
-    learning_rate     = 0.01,
-    max_depth         = 5,
-    n_estimators      = 150,   
-    subsample         = 1.0,
+    n_estimators      = 207,
+    max_depth         = 3,
+    learning_rate     = 0.0181,
+    subsample         = 0.817,
+    colsample_bytree  = 0.842,
+    min_child_weight  = 6,
+    reg_alpha         = 0.104,
     use_label_encoder = False,
     eval_metric       = 'logloss',
     random_state      = 33
 )
 
-pipeline = make_pipeline(z,m)
+pipeline = make_pipeline(f,z,m)
 
 pipeline.fit(trainx,trainy)
-predy = pipeline.predict(testx)
-print("The accuracy score is: " +str(accuracy_score(testy,predy)))
-print("After cross validation our score is: " +str(np.mean(cross_val_score(pipeline, trainx ,trainy , cv=10, scoring='accuracy'))))
+
+probay = pipeline.predict_proba(testx)[:, 1]
+print("The ROC-AUC score is:",roc_auc_score(testy, probay))
+print("After cross validation our score is: " +str(np.mean(cross_val_score(pipeline, trainx ,trainy , cv=10, scoring='roc_auc'))))
 
 new_data = pd.DataFrame([{
     "Pregnancies": 6,
