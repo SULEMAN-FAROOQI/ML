@@ -60,15 +60,15 @@ z = make_column_transformer(
 )
 
 m = LGBMRegressor(
-    n_estimators=667,
-    learning_rate=0.0475,
-    num_leaves=89,
+    n_estimators=702,
+    learning_rate=0.0258,
+    num_leaves=115,
     max_depth=4,
-    min_child_samples=30,
-    subsample=0.632,
-    colsample_bytree=0.881,
-    reg_alpha=0.000265,
-    reg_lambda=2.179,
+    min_child_samples=37,
+    subsample=0.7857,
+    colsample_bytree=0.5008,
+    reg_alpha=0.0722,
+    reg_lambda=0.0277,
     verbose=-1
 )
 
@@ -80,25 +80,21 @@ print("The R2 Score is:",r2_score(testy,predy))
 
 print("-----------------------------------------------------------------------------------------------------")
 
-new_data = pd.DataFrame({
-    "Store":                  [1],
-    "Holiday_Flag":           [0],
-    "Temperature":            [42.27],
-    "Fuel_Price":             [2.989],
-    "CPI":                    [212.566881],
-    "Unemployment":           [7.742],
-    "Week":                   [5],
-    "Month":                  [2],
-    "Year":                   [2011],
-    "Purchasing_Power_Index": [0.000608],
-    "Sales_lag_1":            [1316899.31],
-    "Sales_lag_2":            [1327405.42],
-    "Sales_lag_4":            [1444732.28],
-    "Sales_lag_8":            [1682614.26],
-    "Sales_lag_52":           [1643690.90],
-    "Sales_rolling_4":        [1370012.74],
-    "Sales_rolling_8":        [1601121.30],
+new_row = pd.DataFrame({
+    "Store": [1],
+    "Date": ["12-02-2011"], 
+    "Weekly_Sales": [None],   
+    "Holiday_Flag": [0],
+    "Temperature": [42.27],
+    "Fuel_Price": [2.989],
+    "CPI": [212.566881],
+    "Unemployment": [7.742]
 })
 
-prediction = pipe.predict(new_data)
-print("The Week Sales of Walmart store",new_data["Store"].values[0],"is",prediction[0])
+combined = pd.concat([data, new_row], ignore_index=True)
+combined = combined.sort_values(['Store', 'Date']).reset_index(drop=True) 
+combined = DataTransformation(combined)
+
+new_input = combined.iloc[[-1]].drop("Weekly_Sales", axis=1)
+prediction = pipe.predict(new_input)
+print("The Week Sales of Walmart store",new_input["Store"].values[0],"is",prediction[0],"$")

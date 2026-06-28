@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import Ridge
+from sklearn.impute import SimpleImputer
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
@@ -31,7 +32,6 @@ def ColumnTransformation(data):
     data["month"] = data["DATE"].dt.month
     data["year"]  = data["DATE"].dt.year
     data = data.drop(columns=["Date", "DATE"])  
-    data = data.dropna()
     return data
 
 Data = ColumnTransformation(data)
@@ -42,11 +42,10 @@ y = Data["GLD"]
 trainx , testx , trainy , testy = train_test_split(x, y, test_size=0.3, shuffle=False) # For time series
 
 z = make_column_transformer(
-    (StandardScaler(), ["SPX", "USO", "SLV", "EUR/USD",
-                        "GLD_lag1", "GLD_lag2", "GLD_lag3", "GLD_lag5",
-                        "SLV_lag1", "SLV_lag2",
-                        "GLD_ma5", "GLD_ma20",
-                        "day", "month", "year"]),  
+    (make_pipeline(SimpleImputer(strategy='median'), StandardScaler()), 
+     ["GLD_lag1", "GLD_lag2", "GLD_lag3", "GLD_lag5",
+      "SLV_lag1", "SLV_lag2", "GLD_ma5", "GLD_ma20"]),
+    (StandardScaler(), ["SPX", "USO", "SLV", "EUR/USD", "day", "month", "year"]),
     remainder="drop"
 )
 
@@ -58,24 +57,19 @@ pipe.fit(trainx,trainy)
 predy = pipe.predict(testx)
 print("The R2 score after Ridge Regression is:",(r2_score(testy,predy)))
 
-new_data = pd.DataFrame({
-    "Date": ["1/2/2008"],
-    "SPX":[1447.160034],
-    "USO":[78.470001],
-    "SLV":[15.18],
-    "EUR/USD":[1.471692],
-    "GLD_lag1":[84.86],
-    "GLD_lag2":[84.70],
-    "GLD_lag3":[84.55],
-    "GLD_lag5":[84.20],
-    "SLV_lag1":[15.10],
-    "SLV_lag2":[15.05],
-    "GLD_ma5":[84.60],
-    "GLD_ma20":[83.90],
-    "day":[2],
-    "month":[1],
-    "year":[2008]
+new_row = pd.DataFrame({
+    "Date":    ["4/21/2015"],
+    "SPX":     [2097.290039],
+    "USO":     [19.450001],
+    "SLV":     [15.320000],
+    "EUR/USD": [1.074172],
+    "GLD":     [np.nan]
 })
 
-prediction = pipe.predict(new_data) 
+combined = pd.concat([data, new_row], ignore_index=True)
+combined = combined.sort_values('Date').reset_index(drop=True) 
+combined = ColumnTransformation(combined)
+
+new_input = combined.iloc[[-1]].drop("GLD", axis=1)
+prediction = pipe.predict(new_input)
 print("Predicted GLD price:", prediction[0],"$")
