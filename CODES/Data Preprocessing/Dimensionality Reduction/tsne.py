@@ -5,6 +5,8 @@ from sklearn.datasets import load_digits
 digits = load_digits()
 x, y = digits.data, digits.target
 
+# Embedding is the process of converting high dimensional into low dimesnions by tsne.
+
 tsne = TSNE(n_components=2, perplexity=30, learning_rate='auto', init='pca', random_state=42) # n_components=2 for a 2D plot
 x_embedded = tsne.fit_transform(x)
 
