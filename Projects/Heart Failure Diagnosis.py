@@ -43,7 +43,8 @@ m = LGBMClassifier(
     reg_alpha=9.13e-08,
     reg_lambda=6.89e-06,
     random_state=42, 
-    verbose = -1
+    verbose = -1,
+    class_weight='balanced'
 )
 
 pipe = make_pipeline(f,m)
