@@ -278,3 +278,52 @@ plt.legend()
 plt.show()
 
 '''
+
+'''
+
+EarlyStopping Callback — Arguments
+
+monitor
+Quantity to be monitored.
+Default: "val_loss"
+
+min_delta
+Minimum change in the monitored quantity to qualify as an improvement.
+An absolute change smaller than min_delta counts as no improvement.
+Default: 0
+
+patience
+Number of epochs with no improvement after which training will be stopped.
+Default: 0
+
+verbose
+Verbosity mode: 0 or 1.
+0 = silent
+1 = displays messages when the callback takes an action
+Default: 0
+
+mode
+One of {"auto", "min", "max"}
+- min: training stops when the monitored quantity stops decreasing
+- max: training stops when the monitored quantity stops increasing
+- auto: direction is inferred automatically from the name of the monitored quantity
+Default: "auto"
+
+baseline
+Baseline value for the monitored quantity.
+If not None, training stops if the model doesn't improve over this baseline.
+Default: None
+
+restore_best_weights
+Whether to restore model weights from the epoch with the best value of the monitored quantity.
+- If False, uses the weights from the last training step.
+- An epoch is restored regardless of performance relative to baseline.
+- If no epoch improves on baseline, training runs for `patience` epochs and restores the best epoch from that set.
+Default: False
+
+start_from_epoch
+Number of epochs to wait before monitoring for improvement begins.
+Allows a warm-up period where no improvement is expected, so training isn't stopped prematurely.
+Default: 0
+
+'''
