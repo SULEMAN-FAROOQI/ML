@@ -75,7 +75,7 @@ callback = EarlyStopping(
     start_from_epoch=0,
 )
 
-m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3), callbacks=callback)
+m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
 
 # print(m.summary()) Gives Summary of the models perfomance
 # print(m.layers[0].get_weights) Prints weight and biases of 0th layer
@@ -203,6 +203,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential # type: ignore
 from tensorflow.keras.layers import Dense, Dropout # type: ignore
 from sklearn.metrics import r2_score
+from tensorflow.keras.regularizers import l2 # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from scikeras.wrappers import KerasRegressor
 import warnings
@@ -242,9 +243,9 @@ def build_model(meta):
 
     m = Sequential() # Here m is our model and now we will add layers in it
 
-    m.add(Dense(16, activation="relu", input_dim=n_features)) # Input layer
+    m.add(Dense(16, activation="relu", input_dim=n_features, kernel_regularizer=l2(0.03))) # Input layer 
     m.add(Dropout(0.2)) # For Removing Overfitting Factor 
-    m.add(Dense(8, activation="relu")) # Hidden layer 1
+    m.add(Dense(8, activation="relu", kernel_regularizer=l2(0.03))) # Hidden layer 1
     m.add(Dropout(0.2))
     m.add(Dense(1, activation="linear")) # Output layer
 
