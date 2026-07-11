@@ -66,13 +66,9 @@ def build_model(meta):
 
 callback = EarlyStopping(
     monitor="val_loss",
-    min_delta=0,
-    patience=0,
+    patience=5,
+    restore_best_weights=True,
     verbose=0,
-    mode="auto",
-    baseline=None,
-    restore_best_weights=False,
-    start_from_epoch=0,
 )
 
 m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
@@ -160,13 +156,9 @@ def build_model(meta):
 
 callback = EarlyStopping(
     monitor="val_loss",
-    min_delta=0,
-    patience=0,
+    patience=5,
+    restore_best_weights=True,
     verbose=0,
-    mode="auto",
-    baseline=None,
-    restore_best_weights=False,
-    start_from_epoch=0,
 )
 
 m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
@@ -243,9 +235,9 @@ def build_model(meta):
 
     m = Sequential() # Here m is our model and now we will add layers in it
 
-    m.add(Dense(16, activation="relu", input_dim=n_features, kernel_regularizer=l2(0.03))) # Input layer 
+    m.add(Dense(16, activation="relu", input_dim=n_features, kernel_regularizer=l2(0.005))) # Input layer 
     m.add(Dropout(0.2)) # For Removing Overfitting Factor 
-    m.add(Dense(8, activation="relu", kernel_regularizer=l2(0.03))) # Hidden layer 1
+    m.add(Dense(8, activation="relu", kernel_regularizer=l2(0.005))) # Hidden layer 1
     m.add(Dropout(0.2))
     m.add(Dense(1, activation="linear")) # Output layer
 
@@ -255,13 +247,9 @@ def build_model(meta):
 
 callback = EarlyStopping(
     monitor="val_loss",
-    min_delta=0,
-    patience=0,
+    patience=15,
+    restore_best_weights=True,
     verbose=0,
-    mode="auto",
-    baseline=None,
-    restore_best_weights=False,
-    start_from_epoch=0,
 )
 
 m = KerasRegressor(model=build_model, epochs=150, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
@@ -280,9 +268,9 @@ plt.show()
 
 '''
 
-'''
+# EarlyStopping Callback — Arguments
 
-EarlyStopping Callback — Arguments
+'''
 
 monitor
 Quantity to be monitored.
