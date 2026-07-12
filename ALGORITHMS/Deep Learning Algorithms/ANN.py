@@ -106,7 +106,7 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Dense, Dropout # type: ignore
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
 from scikeras.wrappers import KerasClassifier
@@ -144,10 +144,13 @@ def build_model(meta):
     m = Sequential() # Here m is our model and now we will add layers in it
 
     m.add(Dense(256, activation="relu", input_dim=n_features)) # Input layer
+    m.add(BatchNormalization())
     m.add(Dropout(0.2)) # For Removing Overfitting Factor 
     m.add(Dense(128, activation="relu")) # Hidden layer 1
+    m.add(BatchNormalization())
     m.add(Dropout(0.2))
     m.add(Dense(64, activation="relu")) # Hidden layer 2
+    m.add(BatchNormalization())
     m.add(Dense(10, activation="softmax")) # Output layer
 
     m.compile(loss="sparse_categorical_crossentropy", optimizer="Adam", metrics=["accuracy"]) # Using Adam gradient descent as optimizer
