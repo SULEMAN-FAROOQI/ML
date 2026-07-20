@@ -1,8 +1,9 @@
-# Binary Classification ANN:
+# Binary Classification:
 
 '''
 
 import os
+import warnings
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -16,7 +17,6 @@ from tensorflow.keras.layers import Dense # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
 from scikeras.wrappers import KerasClassifier
-import warnings
 
 warnings.filterwarnings('ignore')
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
@@ -93,7 +93,7 @@ print("The Accuracy Score is:",accuracy_score(testy,predy))
 
 '''
 
-# MultiNomial Classification ANN:
+# Multinomial Classification:
 
 '''
 
@@ -177,95 +177,6 @@ plt.plot(history.history_["loss"], label="train loss")
 plt.plot(history.history_["val_loss"], label="val loss")
 plt.plot(history.history_["accuracy"], label="accuracy")
 plt.plot(history.history_["val_accuracy"], label="val accuracy")
-plt.legend()
-plt.show()
-
-'''
-
-# ANN Regressor
-
-'''
-
-import os
-import numpy as np
-import pandas as pd
-import tensorflow as tf # type: ignore
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import FunctionTransformer, MinMaxScaler # Used when we know upper bound and lower bound of values
-from sklearn.compose import make_column_transformer
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Dense, Dropout # type: ignore
-from sklearn.metrics import r2_score
-from tensorflow.keras.regularizers import l2 # type: ignore
-from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
-from scikeras.wrappers import KerasRegressor
-import warnings
-
-warnings.filterwarnings('ignore')
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
-tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
-
-df = pd.read_csv("Datasets\\Admission_Predict_Ver1.1.csv")
-df.columns = df.columns.str.strip()
-
-# print(df.sample(10))
-# print(df.shape)
-# print(df.duplicated().sum())
-
-x = df.drop("Chance of Admit", axis = 1)
-y = df["Chance of Admit"]
-
-trainx, testx, trainy, testy = train_test_split(x, y, test_size=0.3, random_state=33)
-
-def FeatureTransformer(data):
-
-    data = data.drop("Serial No.", axis = 1)
-    return data
-
-f = FunctionTransformer(FeatureTransformer)
-
-z = make_column_transformer(
-    (MinMaxScaler(), ["GRE Score", "TOEFL Score", "CGPA", "SOP", "LOR"]),
-    remainder= "passthrough"
-)
-
-def build_model(meta):
-
-    n_features = meta["n_features_in_"]
-
-    m = Sequential() # Here m is our model and now we will add layers in it
-
-    m.add(Dense(16, activation="relu", input_dim=n_features, kernel_regularizer=l2(0.005))) # Input layer 
-    m.add(Dropout(0.2)) # For Removing Overfitting Factor 
-    m.add(Dense(8, activation="relu", kernel_regularizer=l2(0.005))) # Hidden layer 1
-    m.add(Dropout(0.2))
-    m.add(Dense(1, activation="linear")) # Output layer
-
-    m.compile(loss="mean_squared_error", optimizer="Adam") # Using Adam gradient descent as optimizer
-    
-    return m
-
-callback = EarlyStopping(
-    monitor="val_loss",
-    patience=15,
-    restore_best_weights=True,
-    verbose=0,
-)
-
-m = KerasRegressor(model=build_model, epochs=150, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
-
-pipe = make_pipeline(f, z, m)
-pipe.fit(trainx, trainy)
-
-predy = pipe.predict(testx) 
-print("R2 Score:", r2_score(testy, predy))
-
-history = pipe.named_steps["kerasregressor"]
-plt.plot(history.history_["loss"], label="train loss")
-plt.plot(history.history_["val_loss"], label="val loss")
 plt.legend()
 plt.show()
 

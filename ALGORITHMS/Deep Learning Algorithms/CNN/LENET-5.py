@@ -1,7 +1,6 @@
-# LENET-5:
-
-'''
-
+import os
+import warnings
+import tensorflow as tf
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
@@ -12,6 +11,11 @@ from scikeras.wrappers import KerasClassifier
 from sklearn.pipeline import make_pipeline
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
 
 data = pd.read_csv("Datasets\\MNIST.csv")
 # print(data.head())
@@ -76,5 +80,3 @@ sample_y = testy.iloc[0]
 
 pred = pipe.predict(sample_x)
 print("Predicted:", pred[0], "| Actual:", sample_y)
-
-'''
