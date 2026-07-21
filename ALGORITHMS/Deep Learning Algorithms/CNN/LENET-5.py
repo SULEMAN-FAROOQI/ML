@@ -64,12 +64,12 @@ def build_model(meta):
 
 callback = EarlyStopping(
     monitor="val_loss",
-    patience=5,
+    patience=3,
     restore_best_weights=True,
     verbose=0,
 )
 
-m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=[callback])
+m = KerasClassifier(model=build_model, epochs=20, batch_size=33, verbose=0, validation_split=0.3, callbacks=[callback])
 
 pipe = make_pipeline(f,m)
 pipe.fit(trainx,trainy)
