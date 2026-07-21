@@ -1,4 +1,10 @@
 import os
+import warnings
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf # type: ignore
@@ -13,11 +19,7 @@ from sklearn.metrics import r2_score
 from tensorflow.keras.regularizers import l2 # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from scikeras.wrappers import KerasRegressor
-import warnings
 
-warnings.filterwarnings('ignore')
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
 tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
 
 df = pd.read_csv("Datasets\\Admission_Predict_Ver1.1.csv")

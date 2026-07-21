@@ -4,6 +4,11 @@
 
 import os
 import warnings
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -18,9 +23,6 @@ from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
 from scikeras.wrappers import KerasClassifier
 
-warnings.filterwarnings('ignore')
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
 tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
 
 df = pd.read_csv("Datasets\\Churn_Modelling.csv")
@@ -98,6 +100,12 @@ print("The Accuracy Score is:",accuracy_score(testy,predy))
 '''
 
 import os
+import warnings
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -110,11 +118,7 @@ from tensorflow.keras.layers import Dense, Dropout, BatchNormalization # type: i
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
 from scikeras.wrappers import KerasClassifier
-import warnings
 
-warnings.filterwarnings('ignore')
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
 tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
 
 df = pd.read_csv("Datasets\\MNIST.csv")

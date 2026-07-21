@@ -1,5 +1,10 @@
 import os
 import warnings
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -12,9 +17,6 @@ from sklearn.pipeline import make_pipeline
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
 from sklearn.metrics import accuracy_score
 
-warnings.filterwarnings('ignore')
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
 tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
 
 data = pd.read_csv("Datasets\\MNIST.csv")
