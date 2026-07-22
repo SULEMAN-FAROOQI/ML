@@ -19,6 +19,8 @@ data = pd.read_csv('Datasets\\concrete_data.csv')
 x = data.drop("Strength", axis = 1)
 y = data["Strength"]
 
+
+
 trainx, testx, trainy, testy = train_test_split(x, y, test_size=0.3, random_state=33)
 
 def FeatureTransformation(df):
