@@ -69,7 +69,7 @@ callback = EarlyStopping(
     verbose=0,
 )
 
-m = KerasRegressor(model=build_model, epochs=150, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
+m = KerasRegressor(model=build_model, epochs=150, batch_size=33, verbose=1, validation_split=0.3, callbacks=callback)
 
 pipe = make_pipeline(f, z, m)
 pipe.fit(trainx, trainy)

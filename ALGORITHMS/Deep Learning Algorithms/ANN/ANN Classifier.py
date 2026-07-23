@@ -73,7 +73,7 @@ callback = EarlyStopping(
     verbose=0,
 )
 
-m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
+m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=1, validation_split=0.3, callbacks=callback)
 
 # print(m.summary()) Gives Summary of the models perfomance
 # print(m.layers[0].get_weights) Prints weight and biases of 0th layer
@@ -168,7 +168,7 @@ callback = EarlyStopping(
     verbose=0,
 )
 
-m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=0, validation_split=0.3, callbacks=callback)
+m = KerasClassifier(model=build_model, epochs=50, batch_size=33, verbose=1, validation_split=0.3, callbacks=callback)
 
 pipe = make_pipeline(f, m)
 pipe.fit(trainx, trainy)
