@@ -49,4 +49,65 @@ for batch in datagen.flow(x, batch_size=1, save_to_dir='preview', save_prefix='c
     if i > 20:
         break
 
-# datagen.flow_from_directory is used to perform augmentation on a whole file having imagesS
+# datagen.flow_from_directory is used to perform augmentation on a whole file having images
+
+# Implementation through Scikeras:
+
+'''
+
+import os
+import warnings
+
+warnings.filterwarnings('ignore')
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR logs from TF/absl
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"    # Disable oneDNN custom ops (removes that specific message)
+
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.preprocessing.image import img_to_array, load_img # type: ignore
+from tensorflow.keras.layers import RandomFlip, RandomRotation, RandomTranslation, RandomZoom # type: ignore
+from tensorflow.keras import Sequential # type: ignore
+
+# augmentation is a small Sequential model made purely of augmentation layers.
+# This replaces ImageDataGenerator - each layer below does the same job as one
+# of your old ImageDataGenerator parameters, just implemented as a Keras layer.
+
+augmentation = Sequential([
+    RandomFlip("horizontal"),          # Same as horizontal_flip=True
+    RandomRotation(0.08),              # Angle at which we want our image to rotate (0.08 * 360 ≈ 30 degrees, Keras uses a fraction of a full rotation instead of degrees)
+    RandomTranslation(0.2, 0.2),       # Movement of image (height_factor=0.2 = vertical shift, width_factor=0.2 = horizontal shift)
+    RandomZoom(0.2),                   # Random zoom in or zoom out, same as zoom_range=0.2
+])
+
+# Note: these layers don't have shear_range or fill_mode equivalents built in -
+# RandomTranslation/RandomZoom fill empty space using "reflect" by default
+# (mirrors the image at the boundary), which can be changed via the
+# fill_mode argument on these layers if needed (e.g. fill_mode="constant")
+
+img = load_img("Datasets\\Cats vs Dogs\\test\\cats\\cat.10.jpg", target_size=(180,180))
+# plt.imshow(img)
+# plt.show()
+
+x = img_to_array(img)   # this is a Numpy array with shape (180,180,3)
+x = x.reshape(1,180,180,3)
+
+os.makedirs('preview', exist_ok=True)
+
+# the loop below generates 20 randomly transformed versions of the same image
+# and saves the results to the `preview/` directory
+
+# training=True forces the augmentation layers to actually apply randomness -
+# by default these layers stay OFF (identity/no-op) unless told they're training,
+# since normally they turn themselves off automatically during model.predict()
+
+i = 0
+for i in range(20):
+    augmented = augmentation(x, training=True)
+    augmented_img = augmented[0].numpy().astype("uint8")
+    plt.imsave(f"preview/cat_aug_{i}.jpeg", augmented_img)
+
+# augmentation layers like these are meant to be added directly inside your
+# build_model() Sequential stack (before the Conv2D layers) so they run
+# automatically during scikeras's KerasClassifier.fit() - no flow_from_directory needed
+
+'''
