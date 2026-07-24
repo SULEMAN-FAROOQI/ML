@@ -16,6 +16,8 @@ from tensorflow.keras.preprocessing import image
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay, confusion_matrix
 
+tf.get_logger().setLevel('ERROR')            # Belt-and-suspenders: also mute TF's own logger
+
 train = "C:\\Users\\sulem\\OneDrive\\Desktop\\Codes\\ML\\Datasets\\Cats vs Dogs\\train"
 
 def ImageTransformation(train):
