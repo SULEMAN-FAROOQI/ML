@@ -92,7 +92,7 @@ def build_model(meta):
     m.add(Dense(4096, activation="relu")) # Second layer
     m.add(Dense(1, activation="sigmoid")) # Output layer
 
-    m.compile(loss="binary_crossentropy", optimizer=Adam(learning_rate = 0.001), metrics=["accuracy"]) # Using Adam gradient descent as optimizer
+    m.compile(loss="binary_crossentropy", optimizer=Adam(learning_rate = 0.0001), metrics=["accuracy"]) # Using Adam gradient descent as optimizer
 
     return m
 
