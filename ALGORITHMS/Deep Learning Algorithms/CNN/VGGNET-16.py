@@ -88,25 +88,43 @@ def build_model(meta):
     m.add(MaxPool2D(pool_size=(2,2), padding = "valid", strides = 2))
 
     m.add(Conv2D(128, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(128, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
 
     m.add(MaxPool2D(pool_size=(2,2), padding = "valid", strides = 2))
 
     m.add(Conv2D(256, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(256, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(256, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
 
     m.add(MaxPool2D(pool_size=(2,2), padding = "valid", strides = 2))
 
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
 
     m.add(MaxPool2D(pool_size=(2,2), padding = "valid", strides = 2))
 
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
+
     m.add(Conv2D(512, kernel_size=(3,3), padding="same", activation="relu"))
+    m.add(BatchNormalization())
 
     m.add(MaxPool2D(pool_size=(2,2), padding = "valid", strides = 2))
 
@@ -118,7 +136,7 @@ def build_model(meta):
     m.add(Dropout(0.5))
     m.add(Dense(1, activation="sigmoid")) # Output layer
 
-    m.compile(loss="binary_crossentropy", optimizer=Adam(learning_rate = 0.001), metrics=["accuracy"]) # Using Adam gradient descent as optimizer
+    m.compile(loss="binary_crossentropy", optimizer=Adam(learning_rate = 0.0001), metrics=["accuracy"]) # Using Adam gradient descent as optimizer
 
     return m
 
