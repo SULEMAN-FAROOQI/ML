@@ -3,8 +3,8 @@ import random
 import shutil
 
 # 1. Define your folder paths (change these to your actual paths)
-source_folder = r"C:\\Users\\sulem\\Downloads\\archive.zip"
-destination_folder = r"C:\\Users\\sulem\\OneDrive\\Desktop\\Codes\\ML\\Datasets\\UTK Face"
+source_folder = "C:\\Users\\sulem\\OneDrive\\Pictures\\UTKFace"
+destination_folder = "C:\\Users\\sulem\\OneDrive\\Desktop\\Codes\\ML\\Datasets\\UTK Face\\train"
 num_files_to_select = 10000
 
 # 2. Create the destination folder if it doesn't exist
