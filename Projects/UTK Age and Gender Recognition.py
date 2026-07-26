@@ -34,7 +34,7 @@ for file in os.listdir(filepath):
     img.append(file)
 
 df = pd.DataFrame({"Age":age, "Gender":gender, "imgpath":img})
-df["Age"] = scaler.fit_transform(df["Age"])
+df["Age"] = scaler.fit_transform(df[["Age"]])
 
 datagen = image.ImageDataGenerator(rescale=1./255)
 
@@ -150,7 +150,7 @@ def predict_image(img_path, model, image_size=(180, 180)):
 
     pred_Age, pred_Gender = model.predict(img_array)   # two separate outputs, in outputs=[output1, output2] order
 
-    Age_prediction = pred_Age[0][0]
+    Age_prediction = scaler.inverse_transform([[pred_Age[0][0]]])[0][0]
     Gender_prediction = "Female" if pred_Gender[0][0] > 0.5 else "Male"   # UTK Face convention: 0=male, 1=female
 
     print("Predicted Age:", round(Age_prediction))
