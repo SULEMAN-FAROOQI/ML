@@ -62,7 +62,17 @@ Convolution_layer = VGG16(
     input_shape = (180,180,3)
 )
 
-Convolution_layer.trainable = False
+Convolution_layer.trainable = True
+
+set_trainable = False
+
+for layer in Convolution_layer.layers:
+    if layer.name == 'block5_conv1':
+        set_trainable = True
+    if set_trainable:
+        layer.trainable = True
+    else:
+        layer.trainable = False
 
 def build_model():
 
@@ -75,17 +85,19 @@ def build_model():
     x = RandomZoom(0.1)(x)
     x = RandomContrast(0.1)(x)                  # helps with lighting variation across different photos
 
-    vgg_out = Convolution_layer(x)               # frozen VGG16 now sees augmented images, not the raw ones
+    vgg_out = Convolution_layer(x)               # VGG16 now sees augmented images, not the raw ones
     flatten = Flatten()(vgg_out)
 
     shared = Dense(512, activation="relu", kernel_regularizer=l2(0.0001))(flatten)   
     shared = Dropout(0.2)(shared)                                                    
-    shared = Dense(256, activation="relu", kernel_regularizer=l2(0.0001))(shared)
+    shared = Dense(512, activation="relu", kernel_regularizer=l2(0.0001))(shared)
     shared = Dropout(0.2)(shared)
 
-    # drop l2 entirely on the branch layers -- keep just one regularizer (dropout) this close to the output
-    age_branch = Dense(128, activation="relu")(shared)
+    age_branch = Dense(256, activation="relu")(shared)  
+    age_branch = Dropout(0.3)(age_branch)
+    age_branch = Dense(128, activation="relu")(age_branch)   
     age_branch = Dropout(0.2)(age_branch)
+
     gender_branch = Dense(128, activation="relu")(shared)
     gender_branch = Dropout(0.2)(gender_branch)
 
@@ -95,7 +107,7 @@ def build_model():
     model = Model(inputs=inputs, outputs=[output1, output2])
 
     model.compile(
-        optimizer = Adam(learning_rate = 0.0001),
+        optimizer = Adam(learning_rate = 0.00001),
         loss = {'Age': 'mse', 'Gender': 'binary_crossentropy'},
         metrics = {'Age': 'mae', 'Gender': 'accuracy'},
         loss_weights={'Age': 3, 'Gender': 1}
@@ -128,7 +140,7 @@ class KerasEstimator(BaseEstimator):
         gender_labels = (gender_pred > 0.5).astype(int)
         return np.column_stack([age_pred.ravel(), gender_labels.ravel()])
 
-m = KerasEstimator(epochs=20, batch_size=64)
+m = KerasEstimator(epochs=15, batch_size=64)
 
 trainy = np.column_stack([Age_trainy_scaled, Gender_trainy])  
 m.fit(trainx, trainy)
