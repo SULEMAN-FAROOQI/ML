@@ -140,7 +140,7 @@ class KerasEstimator(BaseEstimator):
         gender_labels = (gender_pred > 0.5).astype(int)
         return np.column_stack([age_pred.ravel(), gender_labels.ravel()])
 
-m = KerasEstimator(epochs=15, batch_size=64)
+m = KerasEstimator(epochs=20, batch_size=64)
 
 trainy = np.column_stack([Age_trainy_scaled, Gender_trainy])  
 m.fit(trainx, trainy)
