@@ -9,7 +9,7 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.base import BaseEstimator
 from tensorflow.keras.applications.vgg16 import VGG16 # type:ignore
-from tensorflow.keras.layers import Dense, Flatten, Dropout, Input, RandomFlip, RandomRotation, RandomZoom, RandomContrast, BatchNormalization # type:ignore
+from tensorflow.keras.layers import Dense, Flatten, Dropout, Input, RandomFlip, RandomRotation, RandomZoom, RandomContrast # type:ignore
 from tensorflow.keras.regularizers import l2 # type: ignore
 from tensorflow.keras.models import Model # type:ignore
 from tensorflow.keras.optimizers import Adam # type:ignore
@@ -34,7 +34,6 @@ for file in os.listdir(filepath):
     img.append(file)
 
 df = pd.DataFrame({"Age":age, "Gender":gender, "imgpath":img})
-df["Age"] = scaler.fit_transform(df[["Age"]])
 
 datagen = image.ImageDataGenerator(rescale=1./255)
 
@@ -53,6 +52,9 @@ x, (Age_y, Gender_y) = generator[0]   # multi_output labels come back as a tuple
 print(x.shape, Age_y.shape, Gender_y.shape)
 
 trainx, testx, Age_trainy, Age_testy, Gender_trainy, Gender_testy = train_test_split(x, Age_y, Gender_y, test_size=0.3, random_state=33)
+
+Age_trainy_scaled = scaler.fit_transform(Age_trainy.reshape(-1,1)).ravel()  
+Age_testy_scaled = scaler.transform(Age_testy.reshape(-1,1)).ravel()         
 
 Convolution_layer = VGG16(
     weights = "imagenet",
@@ -76,17 +78,15 @@ def build_model():
     vgg_out = Convolution_layer(x)               # frozen VGG16 now sees augmented images, not the raw ones
     flatten = Flatten()(vgg_out)
 
-    shared = Dense(512, activation="relu", kernel_regularizer=l2(0.001))(flatten)
-    shared = BatchNormalization()(shared)
-    shared = Dropout(0.3)(shared)
-    shared = Dense(256, activation="relu", kernel_regularizer=l2(0.001))(shared)
-    shared = BatchNormalization()(shared)
-    shared = Dropout(0.3)(shared)
+    shared = Dense(512, activation="relu", kernel_regularizer=l2(0.0001))(flatten)   
+    shared = Dropout(0.2)(shared)                                                    
+    shared = Dense(256, activation="relu", kernel_regularizer=l2(0.0001))(shared)
+    shared = Dropout(0.2)(shared)
 
-    # branch only right before each output
-    age_branch = Dense(128, activation="relu", kernel_regularizer=l2(0.001))(shared)
+    # drop l2 entirely on the branch layers -- keep just one regularizer (dropout) this close to the output
+    age_branch = Dense(128, activation="relu")(shared)
     age_branch = Dropout(0.2)(age_branch)
-    gender_branch = Dense(128, activation="relu", kernel_regularizer=l2(0.001))(shared)
+    gender_branch = Dense(128, activation="relu")(shared)
     gender_branch = Dropout(0.2)(gender_branch)
 
     output1 = Dense(1, activation="linear", name="Age")(age_branch)
@@ -128,16 +128,15 @@ class KerasEstimator(BaseEstimator):
         gender_labels = (gender_pred > 0.5).astype(int)
         return np.column_stack([age_pred.ravel(), gender_labels.ravel()])
 
-m = KerasEstimator(epochs=15, batch_size=64)
+m = KerasEstimator(epochs=20, batch_size=64)
 
-trainy = np.column_stack([Age_trainy, Gender_trainy])
-
+trainy = np.column_stack([Age_trainy_scaled, Gender_trainy])  
 m.fit(trainx, trainy)
 
 preds = m.predict(testx)
 pred_Age, pred_Gender_labels = preds[:, 0], preds[:, 1]
 
-print("Age R2 Score:", r2_score(Age_testy, pred_Age))
+print("Age R2 Score:", r2_score(Age_testy_scaled, pred_Age))   # scaled, not raw
 print("Gender Accuracy Score:", accuracy_score(Gender_testy, pred_Gender_labels))
 
 def predict_image(img_path, model, image_size=(180, 180)):
