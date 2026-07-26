@@ -188,5 +188,5 @@ new_data = pd.DataFrame({
 })
 
 prediction = pipe.predict(new_data)
-result = "Ham" if prediction[0] == 0 else "Spam"
+result = "Important" if prediction[0] == 0 else "Spam"
 print("The Message recieved is:",result)
