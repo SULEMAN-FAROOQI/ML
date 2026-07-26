@@ -98,7 +98,7 @@ def build_model():
         optimizer = Adam(learning_rate = 0.0001),
         loss = {'Age': 'mse', 'Gender': 'binary_crossentropy'},
         metrics = {'Age': 'mae', 'Gender': 'accuracy'},
-        loss_weights={'Age': 3, 'Gender': 99}
+        loss_weights={'Age': 3, 'Gender': 1}
     )
 
     return model
@@ -106,13 +106,13 @@ def build_model():
 
 class KerasEstimator(BaseEstimator):
 
-    def __init__(self, epochs=10, batch_size=64):
+    def __init__(self, epochs, batch_size=64):
         self.epochs = epochs
         self.batch_size = batch_size
 
     def fit(self, X, y):
         X_tr, X_val, y_tr, y_val = train_test_split(X, y, test_size=0.15, random_state=33)
-        callback = EarlyStopping(monitor="val_loss", patience=3, restore_best_weights=True)
+        callback = EarlyStopping(monitor="val_Age_mae", mode="min", patience=3, restore_best_weights=True)
 
         self.model_ = build_model()
         self.model_.fit(
@@ -128,7 +128,7 @@ class KerasEstimator(BaseEstimator):
         gender_labels = (gender_pred > 0.5).astype(int)
         return np.column_stack([age_pred.ravel(), gender_labels.ravel()])
 
-m = KerasEstimator(epochs=10, batch_size=64)
+m = KerasEstimator(epochs=15, batch_size=64)
 
 trainy = np.column_stack([Age_trainy, Gender_trainy])
 
