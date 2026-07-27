@@ -6,7 +6,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
+import tensorflow as tf # type:ignore
 from sklearn.base import BaseEstimator
 from tensorflow.keras.applications.vgg16 import VGG16 # type:ignore
 from tensorflow.keras.layers import Dense, Flatten, Dropout, Input, RandomFlip, RandomRotation, RandomZoom, RandomContrast # type:ignore

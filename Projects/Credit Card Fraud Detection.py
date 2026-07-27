@@ -8,6 +8,8 @@ from sklearn.metrics import roc_auc_score, precision_score, confusion_matrix, Co
 from lightgbm import LGBMClassifier
 from sklearn.base import BaseEstimator, TransformerMixin
 
+# TransformerMixin gives your class a `.fit_transform()` method for free, you only had to write `fit()` and `transform()` yourself.
+
 train = pd.read_csv("Datasets\\Credit Card Fraud Detection\\train.csv")
 
 trainx = train.drop("is_fraud", axis = 1)
@@ -48,7 +50,6 @@ def FeatureTransformation(df):
     df = df.sort_values(['cc_num', 'trans_date_trans_time'])
     dt_sorted = pd.to_datetime(df['trans_date_trans_time']) # Recompute dt after the sort so it's correct regardless of input order.
     df['time_since_last_trans'] = dt_sorted.groupby(df['cc_num']).diff().dt.total_seconds().fillna(-1)
-    df['card_txn_count'] = df.groupby('cc_num').cumcount()
 
     df = df.sort_index()   # undo the sort, restore original row order to match y
 
@@ -72,6 +73,28 @@ def FeatureTransformation(df):
 
        Each card's counter resets independently (a different card like cc_num = 222 starts back at -1 / 0 for its own first transaction).
 
+    '''
+
+    df['card_txn_count'] = df.groupby('cc_num').cumcount()
+
+    '''
+    
+       cumcount(): a running counter of how many transactions we've SEEN SO FAR for each card, starting at 0.
+
+       Example, one card (cc_num = 111) with 3 transactions in time order:
+
+       row   cc_num   card_txn_count
+       0     111      0   <- this card's 1st transaction on record (0 seen before it)
+       1     111      1   <- this card's 2nd transaction (1 seen before it)
+       2     111      2   <- this card's 3rd transaction (2 seen before it)
+    
+       A different card (cc_num = 222) starts its OWN count back at 0 --
+       cumcount() resets independently per group, it never mixes counts across different cards.
+    
+       Why it matters for fraud: a low count (0, 1, 2...) means we have little to no history on this card yet ,new/unfamiliar cards 
+       behave differently from cards with a long, established transaction history, so this gives the model a sense of 
+       "how much do we actually know about this card so far."
+    
     '''
 
     df = df.drop(["Unnamed: 0", "trans_date_trans_time", "first", "last", "street", "zip", "dob", "trans_num", "unix_time", "lat", 
