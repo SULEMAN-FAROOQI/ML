@@ -16,3 +16,16 @@ Datasets/Cats vs Dogs/
 Datasets/Helicopter vs Drones/
 Datasets/UTK Face/
 Datasets/Birds Species/
+
+.ipynb_checkpoints/
+*.pyc
+__pycache__/
+*.pyo
+.cache/
+
+.vscode/
+venv/
+.env
+*.env
+*.pyc
+*.pyo
