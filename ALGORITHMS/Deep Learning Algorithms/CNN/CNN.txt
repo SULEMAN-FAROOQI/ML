@@ -1,0 +1,5 @@
+Rule to add neurons in Dense layer:
+
+There's a widely-cited rule of thumb for sizing a hidden layer relative to your data: keep the number of hidden neurons below 
+Ns / (α × (Ni + No)), where Ns is your training sample count, Ni and No are your input/output sizes, and α is a scaling factor 
+(typically 2-10) — this limits free parameters to a small portion of your data's actual degrees of freedom, to prevent overfitting

@@ -111,3 +111,45 @@ for i in range(20):
 # automatically during scikeras's KerasClassifier.fit() - no flow_from_directory needed
 
 '''
+
+# DATA AUGMENTATION - CLASSES REFERENCE
+
+'''
+
+1. Geometric Transformations
+   - Flips (horizontal/vertical), rotation, translation, shear, scale/zoom, crop, perspective/affine warp
+
+2. Photometric / Color Transformations
+   - Brightness, contrast, saturation, hue jitter, gamma correction, channel shift, grayscale
+
+3. Noise Injection
+   - Gaussian noise, salt-and-pepper, speckle, sensor/ISO noise
+
+4. Blur / Filtering
+   - Gaussian blur, motion blur, sharpen, median filter
+
+5. Random Erasing / Occlusion
+   - Cutout, Random Erasing, GridMask
+
+6. Mixing-Based
+   - Mixup, CutMix, Mosaic
+
+7. Elastic / Distortion-Based
+   - Elastic transform, grid distortion, optical distortion
+
+8. Feature-Space Augmentation
+   - SMOTE-style interpolation, adversarial perturbation, manifold mixup
+
+9. Generative / Synthetic
+   - GAN-generated samples, diffusion-generated samples, style transfer
+
+10. Policy-Based / Automated
+    - AutoAugment, RandAugment, TrivialAugment
+
+OTHER MODALITIES (non-image)
+- Text: synonym replacement, back-translation, random insert/delete/swap, contextual embedding substitution
+- Audio: time-stretch, pitch shift, noise injection, SpecAugment
+- Tabular: SMOTE/ADASYN, feature noise, feature permutation
+- Time-series: window slicing, jittering, time-warping, magnitude-warping
+
+'''
