@@ -6,7 +6,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"     # Suppress INFO, WARNING, and ERROR
 
 from tensorflow.keras.datasets import imdb # Contains Reviews and Sentiments of Movies
 from tensorflow.keras import Sequential, Input # type: ignore
-from tensorflow.keras.layers import Dense, SimpleRNN, Flatten, Embedding, Dropout  # type: ignore
+from tensorflow.keras.layers import Dense, SimpleRNN, Flatten, Embedding, Dropout, Bidirectional  # type: ignore
 from tensorflow.keras.utils import pad_sequences
 from scikeras.wrappers import KerasClassifier
 from sklearn.metrics import accuracy_score
@@ -23,11 +23,8 @@ def build_deep_model(meta):
     m.add(Input(shape=(180,)))
     m.add(Embedding(input_dim=10000, output_dim=30))
 
-    # Stacked RNN layers : Every layer except the last must return the full sequence (return_sequences=True) so the next RNN layer has a sequence to read timestep by timestep. 
-    # Only the final RNN layer collapses to a single vector (return_sequences=False).
-                       
-    m.add(SimpleRNN(5, return_sequences=True))       
-    m.add(SimpleRNN(5, return_sequences=False)) # last layer : only final timestep output
+    m.add(Bidirectional(SimpleRNN(5, return_sequences=True)))
+    m.add(Bidirectional(SimpleRNN(5, return_sequences=False))) # last layer : only final timestep output
 
     m.add(Dense(1, activation="sigmoid"))
 
@@ -41,4 +38,4 @@ m.fit(trainx, trainy)
 predy = m.predict(testx)
 print("Accuracy:", accuracy_score(testy, predy))
 
-# In this way both DeepLSTM and DeepGRU can be implemented.
+# In this way both BiDirectional LSTM and BiDirectional GRU can be implemented.
