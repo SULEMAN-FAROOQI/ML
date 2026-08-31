@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Embedding, LSTM, Dense  # type: ignore
+from tensorflow.keras.layers import Embedding, GRU, Dense  # type: ignore  # <-- swapped LSTM for GRU
 from scikeras.wrappers import KerasClassifier
 
 faqs = """About Mammals and Terrestrial Vertebrates
@@ -187,7 +187,7 @@ def build_model(meta):
     m = Sequential()
 
     m.add(Embedding(769, 180, input_shape = (60,)))  # input_shape must be a tuple
-    m.add(LSTM(128))
+    m.add(GRU(128))    # <-- swapped: GRU instead of LSTM
     m.add(Dense(769, activation="softmax"))
 
     m.compile(loss="categorical_crossentropy", optimizer = "adam", metrics=["accuracy"]) # Lr should be taken small while fine tuning
@@ -204,8 +204,8 @@ text = """Red Pandas inhabit temperate coniferous and deciduous mountain forests
 tokkened_text = tokenizer.texts_to_sequences([text])[0]
 padded_tokkened_texts = pad_sequences([tokkened_text], maxlen = max_len - 1, padding = "pre")
 
-prediction = m.predict(padded_tokkened_texts)  # already decoded back to the class label
-position = np.argmax(prediction[0])   
+prediction = m.predict(padded_tokkened_texts)
+position = np.argmax(prediction[0])
 
 for word,index in tokenizer.word_index.items():
     if index == position:
@@ -227,4 +227,4 @@ for i in range(3):
         if index == position:
             text = text + " " + word
             print(text)
-            break  
+            break 
