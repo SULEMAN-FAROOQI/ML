@@ -17,6 +17,7 @@ Datasets/Helicopter vs Drones/
 Datasets/UTK Face/
 Datasets/Birds Species/
 Datasets/Fashion Images
+notebooks/
 
 .ipynb_checkpoints/
 *.pyc
