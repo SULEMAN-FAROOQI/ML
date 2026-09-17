@@ -37,7 +37,7 @@ pipe = make_pipeline(f,z,m)
 
 pipe.fit(trainx,trainy)
 predy = pipe.predict(testx)
-print("The R2 score after using Random Forest Regressor is:",r2_score(testy,predy))
+print("The R2 score after using Linear Regression is:",r2_score(testy,predy))
 
 data = {
     'Car_Name': ['Wagon R'],
@@ -47,7 +47,7 @@ data = {
     'Fuel_Type': ['Petrol'],
     'Seller_Type': ['Dealer'],
     'Transmission': ['Manual'],
-    'Owner': [0]
+    'Owner': [2]
 }
 
 new_data = pd.DataFrame(data)
