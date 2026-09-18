@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer 
 import string
 from sklearn.preprocessing import LabelEncoder , FunctionTransformer
-from wordcloud import WordCloud
+# from wordcloud import WordCloud
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
