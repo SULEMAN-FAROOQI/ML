@@ -78,8 +78,7 @@ trainx,testx,trainy,testy = train_test_split(x,y, test_size=0.3, random_state=33
 m = LogisticRegression(class_weight="balanced") 
 
 # By using Logistic Regression every Fake example in the loss function gets counted as if it were ~2.6x more important than a Real example. 
-# The optimizer now gets punished much harder for misclassifying Fake headlines, so it stops defaulting to "Real" 
-# just because Real is more common.
+# The optimizer now gets punished much harder for misclassifying Fake headlines, so it stops defaulting to "Real" just because Real is more common.
 
 pipe = make_pipeline(z,m)
 
@@ -98,4 +97,3 @@ new_data = pd.DataFrame({
 prediction = pipe.predict(new_data)
 result = "Fake" if prediction[0] == 0 else "Real"
 print("The News is",result)
-
