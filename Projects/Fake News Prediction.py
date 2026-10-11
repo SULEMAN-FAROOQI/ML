@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer 
+from functools import lru_cache  # for caching stemmed words
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -29,6 +30,12 @@ def ensure_nltk_data():
             nltk.download(name)
 
 ensure_nltk_data()
+
+stop_words = set(stopwords.words("english"))  # load once
+
+@lru_cache(maxsize=None)
+def stem_word(w):
+    return ps.stem(w)  # each unique word is stemmed only once
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
@@ -54,7 +61,7 @@ def TextTransformation(text):
 
     TEXT = []
     for j in Text:
-        if j not in stopwords.words("english") and j not in string.punctuation:
+        if j not in stop_words and j not in string.punctuation:  
             TEXT.append(j)
 
     Sentences = []
@@ -91,7 +98,7 @@ print("The Precision Score after Logistic Regression is:",precision_score(testy,
 print("-------------------------------------------------------------------------------------")
 
 new_data = pd.DataFrame({
-    "Headline": ["Positive earnings growth hasn't been enough to get PPG Industries (NYSE:PPG) shareholders a favorable return over the last year"]
+    "Headline": ["Hedge Funds Are Warming Up To Leggett & Platt, Inc. (LEG)"]
 })
 
 prediction = pipe.predict(new_data)
