@@ -29,14 +29,25 @@ i = make_column_transformer(
 )
 i.set_output(transform="pandas")
 
+# Approximate (lat, lon) of major CA cities
+CITIES = {'sf': (37.77, -122.42), 'la': (34.05, -118.24), 'sd': (32.72, -117.16),
+          'sj': (37.34, -121.89), 'sac': (38.58, -121.49)}
+
 def feature_transformation(data):
     data = data.copy()
     data.columns = [col.split('__')[-1] for col in data.columns]
+
+    data['rooms_per_household']      = data['total_rooms'] / data['households']
     data['bedrooms_per_room']        = data['total_bedrooms'] / data['total_rooms']
     data['population_per_household'] = data['population'] / data['households']
     data['income_per_household']     = data['median_income'] / data['households']
-    data.drop(columns=['total_bedrooms', 'total_rooms',
-                       'population', 'households', 'median_income'], inplace=True)
+
+    # Distance to each major city, plus distance to the nearest one
+    for name, (lat, lon) in CITIES.items():
+        data['dist_' + name] = np.sqrt((data['latitude'] - lat) ** 2 + (data['longitude'] - lon) ** 2)
+
+    data['dist_nearest_city'] = data[['dist_' + n for n in CITIES]].min(axis=1)
+
     return data
 
 f = FunctionTransformer(feature_transformation)
@@ -50,18 +61,18 @@ z = make_column_transformer(
 )
 
 m = XGBRegressor(
-    objective        = 'reg:squarederror',
-    n_estimators     = 700,
-    max_depth        = 6,
-    learning_rate    = 0.05,
-    subsample        = 0.7,
-    colsample_bytree = 0.8,
-    min_child_weight = 5,
-    reg_alpha        = 0.1,   
-    reg_lambda       = 1.5,   
-    gamma            = 0.1,
-    tree_method      = 'hist',
-    random_state     = 42
+    objective='reg:squarederror',
+    n_estimators=3000, # more trees, smaller steps
+    learning_rate=0.02,   
+    max_depth=8, 
+    min_child_weight=3,
+    subsample=0.8, 
+    colsample_bytree=0.8,
+    reg_alpha=0.1, 
+    reg_lambda=1.5, gamma=0.0,
+    tree_method='hist', 
+    random_state=42,
+    n_jobs=-1
 )
 
 pipeline = make_pipeline(i, f, z, m)
